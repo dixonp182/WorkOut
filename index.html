@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Random Slideshow with Timer</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 50px;
+      }
+      #slideshow {
+        width: 1000px;
+        height: 600px;
+        border: 2px solid rgb(50, 115, 139);
+        margin: 20px auto;
+        background-size: cover;
+        background-position: center;
+        font-size: 45px;
+        color: rgb(171, 24, 208);
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      #timer {
+        font-size: 50px;
+        color: rgb(34, 106, 103);
+        text-shadow: black;
+        margin-top: 10px;
+        font-weight: bold;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 20px;
+        color: azure;
+        background-color: rgb(22, 163, 128);
+        cursor: pointer;
+        border-radius: 30 0 0 0;
+        margin: 10 10 10 10;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="startButton">Start</button>
+    <div id="slideshow">You can do it</div>
+    <div id="timer">30:00</div>
+
+    <script>
+      let images = [
+        "images/Slide2.jpg",
+        "images//Slide3.jpg",
+        "images/Slide3.JPG",
+      ];
+
+      let timerInterval, slideshowInterval;
+
+      document
+        .getElementById("startButton")
+        .addEventListener("click", function () {
+          startSlideshow();
+          startTimer(30 * 60);
+          this.disabled = true; // Disable button after start
+        });
+
+      function startSlideshow() {
+        let slideshow = document.getElementById("slideshow");
+
+        function changeImage() {
+          let randomImage = images[Math.floor(Math.random() * images.length)];
+          slideshow.style.backgroundImage = `url('${randomImage}')`;
+
+          let randomTime = Math.floor(Math.random() * 31) + 30; // Between 30 and 60 seconds
+          clearInterval(slideshowInterval);
+          slideshowInterval = setInterval(changeImage, randomTime * 1000);
+        }
+
+        changeImage(); // Initial change
+      }
+
+      function startTimer(duration) {
+        let timerElement = document.getElementById("timer");
+        let timeLeft = duration;
+
+        function updateTimer() {
+          let minutes = Math.floor(timeLeft / 60);
+          let seconds = timeLeft % 60;
+          timerElement.textContent = `${minutes}:${
+            seconds < 10 ? "0" : ""
+          }${seconds}`;
+
+          if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            clearInterval(slideshowInterval);
+            timerElement.textContent = "Time's up!";
+          } else {
+            timeLeft--;
+          }
+        }
+
+        updateTimer();
+        timerInterval = setInterval(updateTimer, 1000);
+      }
+    </script>
+  </body>
+</html>
